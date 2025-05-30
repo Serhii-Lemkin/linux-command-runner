@@ -9,7 +9,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: rnnr <create|run|list> ...")
+		helpers.PrintDoc()
 		return
 	}
 

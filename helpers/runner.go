@@ -16,7 +16,7 @@ func RunByAlias() {
 
 	aliases, err := LoadAliases()
 	if err != nil {
-		fmt.Println("Error loading aliases:", err)
+		LogError(err.Error())
 		return
 	}
 

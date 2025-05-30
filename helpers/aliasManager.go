@@ -20,19 +20,33 @@ func DeleteAliases() {
 		return
 	}
 
-	if GetUserConfirmation() {
-		delete(aliases, os.Args[2])
-		SaveAliases(aliases)
-		LogAlias("The next command was deleted \n", aliasToDelete)
-	} else {
-		Log("Delete aborted")
+	verify := true
+	if len(os.Args) >= 4 && os.Args[3] == "-y" {
+		verify = false
 	}
+
+	if verify {
+		if GetUserConfirmation() {
+			deleteInner(aliases, aliasToDelete)
+		} else {
+			Log("Delete aborted")
+		}
+
+	} else {
+		deleteInner(aliases, aliasToDelete)
+	}
+}
+
+func deleteInner(aliases map[string]classes.Alias, aliasToDelete classes.Alias) {
+	delete(aliases, os.Args[2])
+	SaveAliases(aliases)
+	LogAlias("The next command was deleted \n", aliasToDelete)
 }
 
 func ShowSpecificAlias() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		fmt.Println("Error loading aliases:", err)
+		LogError(err.Error())
 	}
 
 	alias, exists := aliases[os.Args[2]]
@@ -51,7 +65,7 @@ func ShowSpecificAlias() {
 func ListAll() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		fmt.Println("Error loading aliases:", err)
+		LogError(err.Error())
 		return
 	}
 
@@ -80,7 +94,7 @@ func CreateAlias() {
 
 	aliases, err := LoadAliases()
 	if err != nil {
-		fmt.Println("Error loading aliases:", err)
+		LogError(err.Error())
 		aliases = map[string]classes.Alias{}
 	}
 
@@ -94,8 +108,7 @@ func CreateAlias() {
 	}
 
 	if err := SaveAliases(aliases); err != nil {
-		fmt.Println("Error saving aliases:", err)
+		LogError(err.Error())
 		return
 	}
 }
-
