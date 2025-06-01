@@ -2,18 +2,27 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"rnnr/classes"
+	"rnnr/detectors"
 	"rnnr/helpers"
 )
 
 var configLocation string = ".rnnr/config.json"
 
-func GetConfig() (*classes.Config, error) {
+func getConfigLocation() (string, error) {
 	home, err := os.UserHomeDir()
 	path := filepath.Join(home, configLocation)
+	return path, err
+}
+
+func GetConfig() (*classes.Config, error) {
+	path, err := getConfigLocation()
+	if err != nil {
+		helpers.LogError(err)
+	}
+
 	var config classes.Config
 	if err != nil {
 		helpers.Log(err)
@@ -35,12 +44,26 @@ func GetConfig() (*classes.Config, error) {
 }
 
 func ShowConfig() {
-	config, err := GetConfig()
+	fileViewer, err := detectors.DetectEditor()
 	if err != nil {
 		helpers.LogError(err)
 	}
 
-	fmt.Println(config)
+	path, err := getConfigLocation()
+	if err != nil {
+		helpers.LogError(err)
+	}
+
+	helpers.Run(fileViewer + " " + path)
+}
+
+func InitConfig() error {
+	path, err := getConfigLocation()
+	if err != nil {
+		helpers.LogError(err)
+	}
+
+	return initConfig(path)
 }
 
 func initConfig(path string) error {

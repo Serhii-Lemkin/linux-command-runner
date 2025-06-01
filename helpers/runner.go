@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"rnnr/detectors"
 	"syscall"
 )
 
@@ -27,27 +28,37 @@ func RunByAlias() {
 		return
 	}
 
-	terminal, args, err := DetectTerminal()
-
-	if err != nil {
-		Log("No supported terminals found")
-	}
-
 	for _, command := range alias.Commands {
-		args = append(args, command, "; exec bash")
-		cmd := exec.Command(terminal, args...)
-		cmd.Stdout = nil
-		cmd.Stderr = nil
-		cmd.Stdin = nil
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			Setpgid: true,
-		}
-
-		if err := cmd.Start(); err != nil {
-			LogError(err)
-			return
-		}
-
-		Log("Launched in new terminal with PID", cmd.Process.Pid)
+		Run(command)
 	}
+}
+
+func Run(command string) {
+	terminal, args, err := detectors.DetectTerminal()
+	if err != nil {
+		LogError(err)
+		return
+	}
+
+	fullCommand := command
+	if os.Args[len(os.Args)-1] == "-keep" {
+		fullCommand += "; exec bash"
+	}
+
+	args = append(args, fullCommand)
+
+	cmd := exec.Command(terminal, args...)
+	cmd.Stdin = nil
+	cmd.Stdout = nil
+	cmd.Stderr = nil
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+	}
+
+	if err := cmd.Start(); err != nil {
+		LogError(err)
+		return
+	}
+
+	Log("Launched in new", terminal, "terminal with PID", cmd.Process.Pid)
 }

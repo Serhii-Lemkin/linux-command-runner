@@ -31,6 +31,10 @@ func main() {
 		helpers.DeleteAliases()
 	case "config":
 		config.ShowConfig()
+	case "openaliases":
+		helpers.OpenAliases()
+	case "initconfig":
+		config.InitConfig()
 	default:
 		fmt.Println("Unknown command:", cmd)
 	}

@@ -34,6 +34,6 @@ func LogAlias(data string, alias classes.Alias) {
 	fmt.Println(data, alias)
 }
 
-func Log(args ...interface{}) {
+func Log(args ...any) {
 	fmt.Println(args...)
 }

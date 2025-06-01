@@ -1,1 +1,1 @@
-sudo go build -o /usr/local/bin/rnnr main.go
+sudo go build -o /usr/local/bin/rnnr
