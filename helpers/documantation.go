@@ -11,9 +11,9 @@ func PrintDoc() {
 	fmt.Println("s, show <alias>           => show what commands are saved to this alias")
 	fmt.Println("d, delete <alias>         => delete already existing aliases -y to autoconfirm")
 	fmt.Println("h, help                   => get help")
+	fmt.Println("rename                    => rename existing aliases")
+
+	fmt.Println("openaliases               => open aliases file in file editor")
 	fmt.Println("config                    => open config file where you can choose some options")
 	fmt.Println("initconfig                => init config file if none is found in the right location")
-	fmt.Println("rename                    => rename existing aliases")
-	fmt.Println("openaliases               => open aliases file in file editor")
-
 }
