@@ -30,8 +30,8 @@ func GetUserConfirmation() bool {
 	}
 }
 
-func LogAlias(data string, alias classes.Alias) {
-	fmt.Println(data, alias)
+func LogAlias(message string, alias classes.Alias, name string) {
+	fmt.Println(message, name, alias)
 }
 
 func Log(args ...any) {

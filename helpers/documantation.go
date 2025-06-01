@@ -13,4 +13,7 @@ func PrintDoc() {
 	fmt.Println("h, help                   => get help")
 	fmt.Println("config                    => open config file where you can choose some options")
 	fmt.Println("initconfig                => init config file if none is found in the right location")
+	fmt.Println("rename                    => rename existing aliases")
+	fmt.Println("openaliases               => open aliases file in file editor")
+
 }

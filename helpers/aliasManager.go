@@ -40,7 +40,7 @@ func DeleteAliases() {
 func deleteInner(aliases map[string]classes.Alias, aliasToDelete classes.Alias) {
 	delete(aliases, os.Args[2])
 	SaveAliases(aliases)
-	LogAlias("The next command was deleted \n", aliasToDelete)
+	LogAlias("The next command was deleted \n", aliasToDelete, os.Args[2])
 }
 
 func ShowSpecificAlias() {
@@ -111,4 +111,36 @@ func CreateAlias() {
 		LogError(err)
 		return
 	}
+}
+
+func RenameAlias() {
+	if len(os.Args) < 4 {
+		Log("The usage is rnnr rename <old name> <new name>")
+	}
+
+	aliases, err := LoadAliases()
+	if err != nil {
+		LogError(err)
+	}
+	oldName := os.Args[2]
+	newName := os.Args[3]
+	oldAlias, exists := aliases[oldName]
+	if !exists {
+		Log("No such alias found")
+		return
+	}
+
+	_, exists = aliases[newName]
+
+	if exists {
+		Log("The name is already taken")
+		return
+	}
+
+	commands := oldAlias.Commands
+	deleteInner(aliases, oldAlias)
+	newAlias := classes.Alias{Commands: commands}
+	aliases[newName] = newAlias
+	LogAlias("New alias created instead: \n", newAlias, newName)
+	SaveAliases(aliases)
 }

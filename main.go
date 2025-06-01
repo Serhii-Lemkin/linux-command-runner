@@ -35,6 +35,8 @@ func main() {
 		helpers.OpenAliases()
 	case "initconfig":
 		config.InitConfig()
+	case "rename":
+		helpers.RenameAlias()
 	default:
 		fmt.Println("Unknown command:", cmd)
 	}
