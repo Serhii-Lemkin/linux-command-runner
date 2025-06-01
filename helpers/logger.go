@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func LogError(err string) {
+func LogError(err error) {
 	fmt.Println("An Error : ", err)
 }
 
@@ -34,6 +34,6 @@ func LogAlias(data string, alias classes.Alias) {
 	fmt.Println(data, alias)
 }
 
-func Log(data string) {
-	fmt.Println(data)
+func Log(args ...interface{}) {
+	fmt.Println(args...)
 }

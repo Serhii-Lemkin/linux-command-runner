@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"rnnr/config"
 	"rnnr/helpers"
 	"strings"
 )
@@ -28,6 +29,8 @@ func main() {
 		helpers.PrintDoc()
 	case "delete", "d":
 		helpers.DeleteAliases()
+	case "config":
+		config.ShowConfig()
 	default:
 		fmt.Println("Unknown command:", cmd)
 	}

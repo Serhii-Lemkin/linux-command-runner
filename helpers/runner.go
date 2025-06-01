@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 func RunByAlias() {
@@ -16,7 +17,7 @@ func RunByAlias() {
 
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err.Error())
+		LogError(err)
 		return
 	}
 
@@ -26,27 +27,27 @@ func RunByAlias() {
 		return
 	}
 
-	terminal := "alacritty"
-	var lastCmd *exec.Cmd
-	for i, c := range alias.Commands {
-		fmt.Printf("→ %s\n", c)
-		//cmd := exec.Command(terminal, "bash", "-c", c)
-		cmd := exec.Command(terminal, "-e", "bash", "-c", c+"; exec bash")
+	terminal, args, err := DetectTerminal()
 
-		if err := cmd.Run(); err != nil {
-			fmt.Println("Command failed:", err)
+	if err != nil {
+		Log("No supported terminals found")
+	}
+
+	for _, command := range alias.Commands {
+		args = append(args, command, "; exec bash")
+		cmd := exec.Command(terminal, args...)
+		cmd.Stdout = nil
+		cmd.Stderr = nil
+		cmd.Stdin = nil
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			Setpgid: true,
+		}
+
+		if err := cmd.Start(); err != nil {
+			LogError(err)
 			return
 		}
 
-		if i == len(alias.Commands)-1 {
-			lastCmd = cmd // remember the last command
-		}
-	}
-
-	if lastCmd != nil {
-		err := lastCmd.Wait()
-		if err != nil {
-			fmt.Println(err)
-		}
+		Log("Launched in new terminal with PID", cmd.Process.Pid)
 	}
 }

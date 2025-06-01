@@ -10,13 +10,13 @@ import (
 func DeleteAliases() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err.Error())
+		LogError(err)
 		return
 	}
 
 	aliasToDelete, exists := aliases[os.Args[2]]
 	if !exists {
-		LogError("No such alias found")
+		Log("No such alias found")
 		return
 	}
 
@@ -46,14 +46,14 @@ func deleteInner(aliases map[string]classes.Alias, aliasToDelete classes.Alias) 
 func ShowSpecificAlias() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err.Error())
+		LogError(err)
 	}
 
 	alias, exists := aliases[os.Args[2]]
 	commands := alias.Commands
 
 	if !exists {
-		LogError("No such alias found")
+		Log("No such alias found")
 		return
 	}
 
@@ -65,7 +65,7 @@ func ShowSpecificAlias() {
 func ListAll() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err.Error())
+		LogError(err)
 		return
 	}
 
@@ -94,7 +94,7 @@ func CreateAlias() {
 
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err.Error())
+		LogError(err)
 		aliases = map[string]classes.Alias{}
 	}
 
@@ -108,7 +108,7 @@ func CreateAlias() {
 	}
 
 	if err := SaveAliases(aliases); err != nil {
-		LogError(err.Error())
+		LogError(err)
 		return
 	}
 }
