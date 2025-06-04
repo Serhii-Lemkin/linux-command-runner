@@ -43,6 +43,8 @@ func main() {
 		config.InitConfig()
 	case "rename":
 		helpers.RenameAlias()
+	case "fuzzy", "f":
+		helpers.FuzzyFindAliasByName()
 	default:
 		fmt.Println("Unknown command:", cmd)
 	}

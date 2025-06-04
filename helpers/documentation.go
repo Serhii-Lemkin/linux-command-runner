@@ -21,7 +21,8 @@ func PrintBasic() {
 	fmt.Println("r, run <alias>            => run command or commands saved to alias. Use < -keep > at the end to keep new terminal alive use < -detach > to open in new terminal window or < -here > to run in the same window. No parameter runs the default in your config <false>")
 	fmt.Println("la, listall               => list all existing aliases")
 	fmt.Println("s, show <alias>           => show what commands are saved to this alias")
-	fmt.Println("d, delete <alias>         => delete already existing aliases -y to autoconfirm")
+	fmt.Println("d, delete <alias>         => delete already existing aliases < -y > to autoconfirm")
 	fmt.Println("h, help                   => get help")
 	fmt.Println("rename                    => rename existing aliases")
+	fmt.Println("fuzzy, f                  => fuzzy find commands by Alias, uses contains < -alias > or < -a > to search only in names < -command > < -c > to search in commands, the default searches in both")
 }
