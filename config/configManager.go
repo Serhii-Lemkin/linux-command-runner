@@ -60,8 +60,7 @@ func initConfig(path string) error {
 		return err
 	}
 
-	defaultCfg := classes.Config{}
-
+	defaultCfg := getDefaultConfig()
 	data, err := json.MarshalIndent(defaultCfg, "", "  ")
 	if err != nil {
 		return err

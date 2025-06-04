@@ -3,7 +3,9 @@ package helpers
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"rnnr/classes"
+	"rnnr/config"
 	"rnnr/logger"
 	"strings"
 )
@@ -34,7 +36,6 @@ func FuzzyFindAliasByName() {
 		searchInAliases = option == "-alias" || option == "-a"
 		searchInCommands = option == "-command" || option == "-c"
 	}
-	logger.Log(searchInCommands == true, searchInAliases == true)
 
 	for name, alias := range aliases {
 		foundInName := false
@@ -58,12 +59,34 @@ func FuzzyFindAliasByName() {
 	if len(foundAliases) > 0 {
 		logger.Log("Found aliases:")
 		for name, a := range foundAliases {
-			fmt.Printf("  %s:\n", name)
+			if searchInAliases {
+				fmt.Printf("  %s:\n", highlightMatches(name, searchText))
+			} else {
+				fmt.Printf("  %s:\n", name)
+			}
 			for i, c := range a.Commands {
-				fmt.Printf("    %d. %s\n", i+1, c)
+				if searchInCommands {
+					fmt.Printf("    %d. %s\n", i+1, highlightMatches(c, searchText))
+				} else {
+					fmt.Printf("    %d. %s\n", i+1, c)
+				}
 			}
 		}
 	} else {
 		logger.Log("nothing found")
 	}
+}
+
+func highlightMatches(text string, search string) string {
+	configItem, err := config.GetConfig()
+	if err != nil {
+		return text
+	}
+
+	escapedSearch := regexp.QuoteMeta(search)
+	re := regexp.MustCompile(`(?i)` + escapedSearch)
+
+	return re.ReplaceAllStringFunc(text, func(m string) string {
+		return configItem.ColorMap[configItem.SearchColor] + m + "\033[0m"
+	})
 }
