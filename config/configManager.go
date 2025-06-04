@@ -5,30 +5,31 @@ import (
 	"os"
 	"path/filepath"
 	"rnnr/classes"
-	"rnnr/detectors"
-	"rnnr/helpers"
+	"rnnr/logger"
+	"rnnr/utils"
 )
 
 var configLocation string = ".rnnr/config.json"
 
-func getConfigLocation() (string, error) {
+func GetConfigLocation() (string, error) {
 	home, err := os.UserHomeDir()
 	path := filepath.Join(home, configLocation)
 	return path, err
 }
 
 func GetConfig() (*classes.Config, error) {
-	path, err := getConfigLocation()
+	path, err := GetConfigLocation()
 	if err != nil {
-		helpers.LogError(err)
+		logger.LogError(err)
 	}
 
 	var config classes.Config
 	if err != nil {
-		helpers.Log(err)
+		logger.Log(err)
 	}
 
-	data, err := os.ReadFile(path)
+	data, err := utils.ReadFile(path)
+
 	if err != nil {
 		err = initConfig(path)
 		return &config, err
@@ -43,24 +44,10 @@ func GetConfig() (*classes.Config, error) {
 	return &config, err
 }
 
-func ShowConfig() {
-	fileViewer, err := detectors.DetectEditor()
-	if err != nil {
-		helpers.LogError(err)
-	}
-
-	path, err := getConfigLocation()
-	if err != nil {
-		helpers.LogError(err)
-	}
-
-	helpers.Run(fileViewer + " " + path)
-}
-
 func InitConfig() error {
-	path, err := getConfigLocation()
+	path, err := GetConfigLocation()
 	if err != nil {
-		helpers.LogError(err)
+		logger.LogError(err)
 	}
 
 	return initConfig(path)
@@ -80,11 +67,11 @@ func initConfig(path string) error {
 		return err
 	}
 
-	err = os.WriteFile(path, data, 0644)
+	err = utils.WriteFile(data, path)
 	if err != nil {
 		return err
 	}
 
-	helpers.Log("Config file was successfully created at", path)
+	logger.Log("Config file was successfully created at", path)
 	return nil
 }

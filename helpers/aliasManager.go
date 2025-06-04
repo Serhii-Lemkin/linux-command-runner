@@ -4,19 +4,20 @@ import (
 	"fmt"
 	"os"
 	"rnnr/classes"
+	"rnnr/logger"
 	"strings"
 )
 
 func DeleteAliases() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 		return
 	}
 
 	aliasToDelete, exists := aliases[os.Args[2]]
 	if !exists {
-		Log("No such alias found")
+		logger.Log("No such alias found")
 		return
 	}
 
@@ -26,10 +27,10 @@ func DeleteAliases() {
 	}
 
 	if verify {
-		if GetUserConfirmation() {
+		if logger.GetUserConfirmation() {
 			deleteInner(aliases, aliasToDelete)
 		} else {
-			Log("Delete aborted")
+			logger.Log("Delete aborted")
 		}
 
 	} else {
@@ -40,20 +41,20 @@ func DeleteAliases() {
 func deleteInner(aliases map[string]classes.Alias, aliasToDelete classes.Alias) {
 	delete(aliases, os.Args[2])
 	SaveAliases(aliases)
-	LogAlias("The next command was deleted \n", aliasToDelete, os.Args[2])
+	logger.LogAlias("The next command was deleted \n", aliasToDelete, os.Args[2])
 }
 
 func ShowSpecificAlias() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 	}
 
 	alias, exists := aliases[os.Args[2]]
 	commands := alias.Commands
 
 	if !exists {
-		Log("No such alias found")
+		logger.Log("No such alias found")
 		return
 	}
 
@@ -65,7 +66,7 @@ func ShowSpecificAlias() {
 func ListAll() {
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 		return
 	}
 
@@ -94,7 +95,7 @@ func CreateAlias() {
 
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 		aliases = map[string]classes.Alias{}
 	}
 
@@ -108,32 +109,32 @@ func CreateAlias() {
 	}
 
 	if err := SaveAliases(aliases); err != nil {
-		LogError(err)
+		logger.LogError(err)
 		return
 	}
 }
 
 func RenameAlias() {
 	if len(os.Args) < 4 {
-		Log("The usage is rnnr rename <old name> <new name>")
+		logger.Log("The usage is rnnr rename <old name> <new name>")
 	}
 
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 	}
 	oldName := os.Args[2]
 	newName := os.Args[3]
 	oldAlias, exists := aliases[oldName]
 	if !exists {
-		Log("No such alias found")
+		logger.Log("No such alias found")
 		return
 	}
 
 	_, exists = aliases[newName]
 
 	if exists {
-		Log("The name is already taken")
+		logger.Log("The name is already taken")
 		return
 	}
 
@@ -141,6 +142,6 @@ func RenameAlias() {
 	deleteInner(aliases, oldAlias)
 	newAlias := classes.Alias{Commands: commands}
 	aliases[newName] = newAlias
-	LogAlias("New alias created instead: \n", newAlias, newName)
+	logger.LogAlias("New alias created instead: \n", newAlias, newName)
 	SaveAliases(aliases)
 }

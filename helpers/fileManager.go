@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"rnnr/classes"
 	"rnnr/detectors"
+	"rnnr/logger"
 )
 
 var aliasLocation string = ".rnnr/aliases.json"
@@ -19,12 +20,12 @@ func getAliasLocation() (string, error) {
 func OpenAliases() {
 	fileViewer, err := detectors.DetectEditor()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 	}
 
 	path, err := getAliasLocation()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 	}
 
 	Run(fileViewer + " " + path)
@@ -34,14 +35,14 @@ func LoadAliases() (map[string]classes.Alias, error) {
 	aliases := make(map[string]classes.Alias)
 	path, err := getAliasLocation()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 	}
 
 	data, err := os.ReadFile(path)
 	if err != nil {
 		err := initAliasesFile(path)
 		if err != nil {
-			Log(err)
+			logger.Log(err)
 		} else {
 			return aliases, nil
 		}
@@ -49,7 +50,7 @@ func LoadAliases() (map[string]classes.Alias, error) {
 
 	err = json.Unmarshal(data, &aliases)
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 	}
 
 	return aliases, err
@@ -83,6 +84,6 @@ func initAliasesFile(path string) error {
 		return err
 	}
 
-	Log("Aliases file was successfully created at", path)
+	logger.Log("Aliases file was successfully created at", path)
 	return nil
 }

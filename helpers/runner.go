@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"rnnr/config"
 	"rnnr/detectors"
+	"rnnr/logger"
+	"slices"
 	"syscall"
 )
 
@@ -18,7 +21,7 @@ func RunByAlias() {
 
 	aliases, err := LoadAliases()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 		return
 	}
 
@@ -36,29 +39,69 @@ func RunByAlias() {
 func Run(command string) {
 	terminal, args, err := detectors.DetectTerminal()
 	if err != nil {
-		LogError(err)
+		logger.LogError(err)
 		return
 	}
 
+	config, err := config.GetConfig()
+
 	fullCommand := command
-	if os.Args[len(os.Args)-1] == "-keep" {
+	keepOpen := slices.ContainsFunc(os.Args, func(s string) bool {
+		return s == "-keep"
+	})
+
+	sameTerminal := config.DefaultSameTerminal == true
+
+	sameTerminalParam := slices.ContainsFunc(os.Args, func(s string) bool {
+		return s == "-here"
+	})
+
+	detachTerminalParam := slices.ContainsFunc(os.Args, func(s string) bool {
+		return s == "-detach"
+	})
+
+	if sameTerminalParam && !detachTerminalParam {
+		sameTerminal = true
+	} else if !sameTerminalParam && detachTerminalParam {
+		sameTerminal = false
+	}
+
+	if keepOpen {
 		fullCommand += "; exec bash"
 	}
 
-	args = append(args, fullCommand)
+	if sameTerminal {
+		shell := os.Getenv("SHELL")
+		if shell == "" {
+			shell = "bash"
+		}
 
-	cmd := exec.Command(terminal, args...)
-	cmd.Stdin = nil
-	cmd.Stdout = nil
-	cmd.Stderr = nil
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setpgid: true,
-	}
+		cmd := exec.Command(shell, "-c", fullCommand)
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
 
-	if err := cmd.Start(); err != nil {
-		LogError(err)
+		if err := cmd.Run(); err != nil {
+			logger.LogError(err)
+		}
+
 		return
-	}
+	} else {
+		args = append(args, fullCommand)
 
-	Log("Launched in new", terminal, "terminal with PID", cmd.Process.Pid)
+		cmd := exec.Command(terminal, args...)
+		cmd.Stdin = nil
+		cmd.Stdout = nil
+		cmd.Stderr = nil
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			Setpgid: true,
+		}
+
+		if err := cmd.Start(); err != nil {
+			logger.LogError(err)
+			return
+		}
+
+		logger.Log("Launched in new", terminal, "terminal with PID", cmd.Process.Pid)
+	}
 }

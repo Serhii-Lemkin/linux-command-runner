@@ -5,12 +5,14 @@ import (
 	"os"
 	"rnnr/config"
 	"rnnr/helpers"
+	"rnnr/logger"
+	"rnnr/utils"
 	"strings"
 )
 
 func main() {
 	if len(os.Args) < 2 {
-		helpers.PrintDoc()
+		helpers.PrintBasic()
 		return
 	}
 
@@ -26,11 +28,16 @@ func main() {
 	case "show", "s":
 		helpers.ShowSpecificAlias()
 	case "help", "h":
-		helpers.PrintDoc()
+		helpers.PrintHelp()
 	case "delete", "d":
 		helpers.DeleteAliases()
 	case "config":
-		config.ShowConfig()
+		path, err := config.GetConfigLocation()
+		if err != nil {
+			logger.LogError(err)
+		}
+
+		utils.ShowConfig(path)
 	case "openaliases":
 		helpers.OpenAliases()
 	case "initconfig":
