@@ -32,7 +32,7 @@ func GetConfig() (*classes.Config, error) {
 
 	if err != nil {
 		err = initConfig(path)
-		return &config, err
+		data, err = utils.ReadFile(path)
 	}
 
 	err = json.Unmarshal(data, &config)

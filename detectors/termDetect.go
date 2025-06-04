@@ -3,25 +3,15 @@ package detectors
 import (
 	"fmt"
 	"os/exec"
-	"rnnr/classes"
 	"rnnr/config"
 )
-
-var terminalCommands = []classes.TerminalCommand{
-	{Name: "ptyxis", Args: []string{"--", "bash", "-c"}},
-	{Name: "alacritty", Args: []string{"-e", "bash", "-c"}},
-	{Name: "kitty", Args: []string{"bash", "-c"}},
-	{Name: "wezterm", Args: []string{"start", "--", "bash", "-c"}},
-	{Name: "gnome-terminal", Args: []string{"--", "bash", "-c"}},
-	{Name: "xterm", Args: []string{"-e", "bash", "-c"}},
-}
 
 func DetectTerminal() (string, []string, error) {
 	configuration, err := config.GetConfig()
 	defaultTerm := configuration.PreferedTerminal
 
 	if err != nil || defaultTerm == "" {
-		for _, term := range terminalCommands {
+		for _, term := range configuration.TerminalList {
 			if path, err := exec.LookPath(term.Name); err == nil {
 				return path, term.Args, nil
 			}
@@ -29,7 +19,7 @@ func DetectTerminal() (string, []string, error) {
 
 	}
 
-	for _, term := range terminalCommands {
+	for _, term := range configuration.TerminalList {
 		if term.Name == defaultTerm {
 			if path, err := exec.LookPath(term.Name); err == nil {
 				return path, term.Args, nil
@@ -37,5 +27,5 @@ func DetectTerminal() (string, []string, error) {
 		}
 	}
 
-	return "", nil, fmt.Errorf("no supported terminal emulator found")
+	return "", nil, fmt.Errorf("no supported terminal emulator found, try running <rnnr initconfig> and if id doesnt work after try adding your terminal in config < rnnr config >")
 }

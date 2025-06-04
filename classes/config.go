@@ -6,4 +6,6 @@ type Config struct {
 	DefaultSameTerminal bool              `json:"default_same_terminal"`
 	SearchColor         string            `json:"search_color"`
 	ColorMap            map[string]string `json:"color_map"`
+	EditorList          []string          `json:"editor_list"`
+	TerminalList        []TerminalCommand `json:"terminal_list"`
 }

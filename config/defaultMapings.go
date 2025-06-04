@@ -1,5 +1,7 @@
 package config
 
+import "rnnr/classes"
+
 var DefaultColorMap = map[string]string{
 	"black":   "\033[30m",
 	"red":     "\033[31m",
@@ -18,4 +20,20 @@ var DefaultColorMap = map[string]string{
 	"bright_magenta": "\033[95m",
 	"bright_cyan":    "\033[96m",
 	"bright_white":   "\033[97m",
+}
+
+var EditorList = []string{
+	"nvim",
+	"gedit",
+	"nano",
+	"vi",
+}
+
+var TerminalAndCommandList = []classes.TerminalCommand{
+	{Name: "ptyxis", Args: []string{"--", "bash", "-c"}},
+	{Name: "alacritty", Args: []string{"-e", "bash", "-c"}},
+	{Name: "kitty", Args: []string{"bash", "-c"}},
+	{Name: "wezterm", Args: []string{"start", "--", "bash", "-c"}},
+	{Name: "gnome-terminal", Args: []string{"--", "bash", "-c"}},
+	{Name: "xterm", Args: []string{"-e", "bash", "-c"}},
 }
