@@ -30,7 +30,7 @@ func PrintDetailed() {
 }
 
 func PrintBasic() {
-	fmt.Println("Most Common UseCases, use < rnnr help > for more")
+	fmt.Println("Most Common UseCases, use <rnnr help> for more")
 	fmt.Println("a, add <alias> <command>     => create command or add to existing alias")
 	fmt.Println("r, run <alias>               => run command or commands saved to alias.")
 	fmt.Println("la, listall                  => list all existing aliases")
