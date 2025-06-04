@@ -81,6 +81,7 @@ func Run(command string) {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
+		logger.Log("used", terminal, "to run => ", command)
 		if err := cmd.Run(); err != nil {
 			logger.LogError(err)
 		}

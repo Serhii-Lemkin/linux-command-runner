@@ -6,7 +6,6 @@ import (
 	"rnnr/config"
 	"rnnr/helpers"
 	"rnnr/logger"
-	"rnnr/utils"
 	"strings"
 )
 
@@ -35,9 +34,9 @@ func main() {
 		path, err := config.GetConfigLocation()
 		if err != nil {
 			logger.LogError(err)
+		} else {
+			helpers.ShowConfig(path)
 		}
-
-		utils.ShowConfig(path)
 	case "openaliases":
 		helpers.OpenAliases()
 	case "initconfig":

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"rnnr/classes"
+	"rnnr/config"
 )
 
 var terminalCommands = []classes.TerminalCommand{
@@ -16,9 +17,23 @@ var terminalCommands = []classes.TerminalCommand{
 }
 
 func DetectTerminal() (string, []string, error) {
+	configuration, err := config.GetConfig()
+	defaultTerm := configuration.PreferedTerminal
+
+	if err != nil || defaultTerm == "" {
+		for _, term := range terminalCommands {
+			if path, err := exec.LookPath(term.Name); err == nil {
+				return path, term.Args, nil
+			}
+		}
+
+	}
+
 	for _, term := range terminalCommands {
-		if path, err := exec.LookPath(term.Name); err == nil {
-			return path, term.Args, nil
+		if term.Name == defaultTerm {
+			if path, err := exec.LookPath(term.Name); err == nil {
+				return path, term.Args, nil
+			}
 		}
 	}
 

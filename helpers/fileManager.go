@@ -17,6 +17,15 @@ func getAliasLocation() (string, error) {
 	return path, err
 }
 
+func ShowConfig(path string) {
+	fileViewer, err := detectors.DetectEditor()
+	if err != nil {
+		logger.LogError(err)
+	}
+
+	Run(fileViewer + " " + path)
+}
+
 func OpenAliases() {
 	fileViewer, err := detectors.DetectEditor()
 	if err != nil {
