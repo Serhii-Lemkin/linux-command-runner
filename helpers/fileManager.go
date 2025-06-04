@@ -17,7 +17,7 @@ func getAliasLocation() (string, error) {
 	return path, err
 }
 
-func ShowConfig(path string) {
+func OpenConfigFile(path string) {
 	fileViewer, err := detectors.DetectEditor()
 	if err != nil {
 		logger.LogError(err)

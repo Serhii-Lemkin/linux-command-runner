@@ -35,7 +35,7 @@ func main() {
 		if err != nil {
 			logger.LogError(err)
 		} else {
-			helpers.ShowConfig(path)
+			helpers.OpenConfigFile(path)
 		}
 	case "openaliases":
 		helpers.OpenAliases()
