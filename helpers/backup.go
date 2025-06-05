@@ -80,8 +80,17 @@ func ImportAliases() {
 
 	newAliases := make(map[string]classes.Alias)
 	err = json.Unmarshal(data, &newAliases)
+	if err != nil {
+		logger.LogError(err)
+		return
+	}
 
 	oldAliases, err := LoadAliases()
+	if err != nil {
+		logger.Log(err)
+		return
+	}
+
 	countImported := 0
 	for name, newAlias := range newAliases {
 		_, exists := oldAliases[name]
