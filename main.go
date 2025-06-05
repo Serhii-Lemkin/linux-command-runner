@@ -45,6 +45,14 @@ func main() {
 		helpers.RenameAlias()
 	case "fuzzy", "f":
 		helpers.FuzzyFindAliasByName()
+	case "exportconfig":
+		helpers.ExportConfig()
+	case "exportaliases":
+		helpers.ExportAliases()
+	case "importconfig":
+		helpers.ImportConfig()
+	case "importaliases":
+		helpers.ImportAliases()
 	default:
 		fmt.Println("Unknown command:", cmd)
 	}

@@ -11,7 +11,7 @@ func LogError(err error) {
 }
 
 func GetUserConfirmation() bool {
-	fmt.Println("Are you sure? y/n")
+	fmt.Print("Are you sure? y/n ")
 	var input string
 
 	for {

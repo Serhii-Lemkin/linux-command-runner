@@ -16,6 +16,10 @@ func PrintConfigAndFilesDoc() {
 	fmt.Println("openaliases                  => open aliases file in file editor")
 	fmt.Println("config                       => open config file where you can choose some options")
 	fmt.Println("initconfig                   => init config file if none is found in the right location or restoreDefaults")
+	fmt.Println("importconfig <path>          => import the config.json from this location, looks for config.json in <path>")
+	fmt.Println("importaliases <path>         => import the aliases.json from this location, looks for aliases.json in <path>")
+	fmt.Println("exportconfig <path>          => export the config.json from default location to the <path>")
+	fmt.Println("exportaliases <path>         => export the aliases.json from default location to the <path>")
 }
 
 func PrintDetailed() {
