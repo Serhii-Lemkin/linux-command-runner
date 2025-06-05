@@ -27,7 +27,7 @@ func DeleteAliases() {
 	}
 
 	if verify {
-		if logger.GetUserConfirmation() {
+		if logger.GetUserConfirmation("Are you sure?") {
 			deleteInner(aliases, aliasToDelete)
 		} else {
 			logger.Log("Delete aborted")

@@ -1,11 +1,14 @@
 package helpers
 
 import (
+	"encoding/json"
 	"io"
 	"os"
 	"path/filepath"
+	"rnnr/classes"
 	"rnnr/config"
 	"rnnr/logger"
+	"rnnr/utils"
 	"strings"
 )
 
@@ -60,14 +63,8 @@ func ExportAliases() {
 }
 
 func ImportAliases() {
-	//To Do: instead of copy paste copy the aliases to the dict.
 	if len(os.Args) != 3 {
 		logger.Log("the usage is <rnnr importaliases your-location-here>")
-	}
-	path, err := getAliasLocation()
-
-	if err != nil {
-		logger.LogError(err)
 	}
 
 	filename := "aliases.json"
@@ -76,13 +73,33 @@ func ImportAliases() {
 		fullPath = filepath.Join(fullPath, filename)
 	}
 
-	err = copyFile(fullPath, path)
+	data, err := utils.ReadFile(fullPath)
 	if err != nil {
-		logger.Log("the aliases file was not imported")
 		logger.LogError(err)
-	} else {
-		logger.Log("the aliases file was imported from", fullPath)
 	}
+
+	newAliases := make(map[string]classes.Alias)
+	err = json.Unmarshal(data, &newAliases)
+
+	oldAliases, err := LoadAliases()
+	countImported := 0
+	for name, newAlias := range newAliases {
+		_, exists := oldAliases[name]
+		if exists {
+			logger.Log("alias <", name, "> exists in imported file and local.")
+			replace := logger.GetUserConfirmation("Do you want to replace existing alias with new?")
+			if replace {
+				oldAliases[name] = newAlias
+				countImported++
+			}
+		} else {
+			oldAliases[name] = newAlias
+			countImported++
+		}
+	}
+
+	SaveAliases(oldAliases)
+	logger.Log("imported", countImported, "aliases")
 }
 
 func ImportConfig() {

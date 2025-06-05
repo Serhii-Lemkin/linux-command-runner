@@ -10,8 +10,8 @@ func LogError(err error) {
 	fmt.Println("An Error : ", err)
 }
 
-func GetUserConfirmation() bool {
-	fmt.Print("Are you sure? y/n ")
+func GetUserConfirmation(message string) bool {
+	fmt.Print(message, "y/n ")
 	var input string
 
 	for {
