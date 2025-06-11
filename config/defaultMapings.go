@@ -23,17 +23,28 @@ var DefaultColorMap = map[string]string{
 }
 
 var EditorList = []string{
+	// Linux
 	"nvim",
 	"gedit",
 	"nano",
 	"vi",
+	// Windows
+	"notepad",
+	"notepad++",
+	"code",
 }
 
 var TerminalAndCommandList = []classes.TerminalCommand{
+	// Linux/macOS terminals
 	{Name: "ptyxis", Args: []string{"--", "bash", "-c"}},
 	{Name: "alacritty", Args: []string{"-e", "bash", "-c"}},
 	{Name: "kitty", Args: []string{"bash", "-c"}},
 	{Name: "wezterm", Args: []string{"start", "--", "bash", "-c"}},
 	{Name: "gnome-terminal", Args: []string{"--", "bash", "-c"}},
 	{Name: "xterm", Args: []string{"-e", "bash", "-c"}},
+	// Windows terminals
+	{Name: "wt", Args: []string{"powershell.exe", "-Command"}},
+	{Name: "cmd", Args: []string{"/C"}},
+	{Name: "powershell", Args: []string{"-Command"}},
+	{Name: "wsl", Args: []string{"bash", "-c"}},
 }

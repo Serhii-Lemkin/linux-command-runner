@@ -7,6 +7,7 @@ import (
 	"rnnr/config"
 	"rnnr/detectors"
 	"rnnr/logger"
+	"runtime"
 	"slices"
 	"syscall"
 )
@@ -67,16 +68,31 @@ func Run(command string) {
 	}
 
 	if keepOpen {
-		fullCommand += "; exec bash"
+		if runtime.GOOS == "windows" {
+			fullCommand += "; pause"
+		} else {
+			fullCommand += "; exec bash"
+		}
 	}
 
 	if sameTerminal {
 		shell := os.Getenv("SHELL")
-		if shell == "" {
-			shell = "bash"
+		var shellArgs []string
+
+		switch runtime.GOOS {
+		case "windows":
+			shell = "powershell"
+			shellArgs = []string{"-NoExit", "-Command", fmt.Sprintf("& { %s }", fullCommand)}
+		default:
+			shell = os.Getenv("SHELL")
+			if shell == "" {
+				shell = "bash"
+			}
+
+			shellArgs = []string{"-c", fullCommand}
 		}
 
-		cmd := exec.Command(shell, "-c", fullCommand)
+		cmd := exec.Command(shell, shellArgs...)
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
@@ -94,8 +110,9 @@ func Run(command string) {
 		cmd.Stdin = nil
 		cmd.Stdout = nil
 		cmd.Stderr = nil
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			Setpgid: true,
+
+		if runtime.GOOS != "windows" {
+			cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 		}
 
 		if err := cmd.Start(); err != nil {
