@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"rnnr/classes"
 	"rnnr/logger"
-	"rnnr/utils"
 )
 
 var configLocation string = ".rnnr/config.json"
@@ -28,11 +27,11 @@ func GetConfig() (*classes.Config, error) {
 		logger.Log(err)
 	}
 
-	data, err := utils.ReadFile(path)
+	data, err := os.ReadFile(path)
 
 	if err != nil {
 		err = initConfig(path)
-		data, err = utils.ReadFile(path)
+		data, err = os.ReadFile(path)
 	}
 
 	err = json.Unmarshal(data, &config)
@@ -66,7 +65,7 @@ func initConfig(path string) error {
 		return err
 	}
 
-	err = utils.WriteFile(data, path)
+	err = os.WriteFile(path, data, 0644)
 	if err != nil {
 		return err
 	}

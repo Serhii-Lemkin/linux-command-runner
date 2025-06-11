@@ -8,7 +8,6 @@ import (
 	"rnnr/classes"
 	"rnnr/config"
 	"rnnr/logger"
-	"rnnr/utils"
 	"strings"
 )
 
@@ -73,7 +72,7 @@ func ImportAliases() {
 		fullPath = filepath.Join(fullPath, filename)
 	}
 
-	data, err := utils.ReadFile(fullPath)
+	data, err := os.ReadFile(fullPath)
 	if err != nil {
 		logger.LogError(err)
 	}
