@@ -1,6 +1,6 @@
 package classes
 
 type TerminalCommand struct {
-	Name string
-	Args []string
+	Name string   `json:"name"`
+	Args []string `json:"args"`
 }

@@ -28,7 +28,6 @@ func GetConfig() (*classes.Config, error) {
 	}
 
 	data, err := os.ReadFile(path)
-
 	if err != nil {
 		err = initConfig(path)
 		data, err = os.ReadFile(path)
