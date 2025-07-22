@@ -16,7 +16,6 @@ func DetectTerminal() (string, []string, error) {
 				return path, term.Args, nil
 			}
 		}
-
 	}
 
 	for _, term := range configuration.TerminalList {

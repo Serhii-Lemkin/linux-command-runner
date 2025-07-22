@@ -42,6 +42,7 @@ func FuzzyFindAliasByName() {
 		if searchInAliases {
 			foundInName = strings.Contains(name, searchText)
 		}
+
 		foundInCommand := false
 		if searchInCommands {
 			for _, command := range alias.Commands {
@@ -56,6 +57,7 @@ func FuzzyFindAliasByName() {
 			foundAliases[name] = alias
 		}
 	}
+
 	if len(foundAliases) > 0 {
 		logger.Log("Found aliases:")
 		for name, a := range foundAliases {

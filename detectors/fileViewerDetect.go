@@ -21,10 +21,10 @@ func DetectEditor() (string, error) {
 			if defaultFileViewer == editor {
 				if path, err := exec.LookPath(editor); err == nil {
 					return path, nil
-
 				}
 			}
 		}
 	}
+
 	return "", fmt.Errorf("no supported text editor found, try running <rnnr initconfig> and if id doesnt work after try adding your text editor in config < rnnr config >")
 }
