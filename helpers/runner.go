@@ -9,7 +9,6 @@ import (
 	"rnnr/logger"
 	"runtime"
 	"slices"
-	"syscall"
 )
 
 func RunByAlias() {
@@ -112,7 +111,7 @@ func Run(command string) {
 		cmd.Stderr = nil
 
 		if runtime.GOOS != "windows" {
-			cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+			cmd.SysProcAttr = getSysProcAttr()
 		}
 
 		if err := cmd.Start(); err != nil {
