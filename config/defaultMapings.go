@@ -42,6 +42,7 @@ var TerminalAndCommandList = []classes.TerminalCommand{
 	{Name: "wezterm", Args: []string{"start", "--", "bash", "-c"}},
 	{Name: "gnome-terminal", Args: []string{"--", "bash", "-c"}},
 	{Name: "xterm", Args: []string{"-e", "bash", "-c"}},
+  {Name: "konsole", Args: []string { "--hold", "-e", "bash", "-c" }},
 	// Windows terminals
 	{Name: "wt", Args: []string{"powershell.exe", "-Command"}},
 	{Name: "cmd", Args: []string{"/C"}},
