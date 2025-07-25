@@ -144,6 +144,7 @@ func copyFile(soursePath string, destinationPath string) error {
 	defer srcFile.Close()
 
 	dstFile, err := os.Create(destinationPath)
+
 	if err != nil {
 		return err
 	}
